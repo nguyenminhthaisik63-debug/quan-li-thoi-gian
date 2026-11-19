@@ -13,6 +13,7 @@
             --danger: #ef4444;
             --danger-hover: #dc2626;
             --success: #10b981;
+            --warning: #f59e0b;
             --bg-color: #f0fdf4;
             --card-bg: #ffffff;
             --text-main: #1f2937;
@@ -27,6 +28,7 @@
             --danger: #f87171;
             --danger-hover: #ef4444;
             --success: #34d399;
+            --warning: #fbbf24;
             --bg-color: #111827;
             --card-bg: #1f2937;
             --text-main: #f9fafb;
@@ -90,14 +92,36 @@
         .btn-primary:hover { background: var(--primary-hover); }
         .btn-danger { background: var(--danger); }
         .btn-danger:hover { background: var(--danger-hover); }
+        .btn-success { background: var(--success); }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
         .btn-outline:hover { background: var(--border); }
         .btn-icon { padding: 4px 8px; font-size: 0.9rem; }
 
-        /* Timer */
+        /* Timer & Pomodoro */
+        .timer-mode-switch {
+            display: flex; justify-content: center; gap: 10px; margin-bottom: 15px;
+        }
+        .mode-btn {
+            padding: 6px 14px; border-radius: 20px; font-size: 0.9rem;
+            background: var(--bg-color); color: var(--text-muted); border: 1px solid var(--border);
+        }
+        .mode-btn.active {
+            background: var(--primary); color: white; border-color: var(--primary);
+        }
+
+        .pomo-sub-modes {
+            display: flex; justify-content: center; gap: 8px; margin-bottom: 10px;
+        }
+        .pomo-tag {
+            padding: 4px 12px; border-radius: 6px; font-size: 0.85rem; cursor: pointer;
+            border: 1px solid var(--border); background: transparent; color: var(--text-main);
+        }
+        .pomo-tag.active-work { background: var(--primary); color: white; border-color: var(--primary); }
+        .pomo-tag.active-break { background: var(--success); color: white; border-color: var(--success); }
+
         .timer-display {
             font-size: 3.5rem; font-family: monospace; font-weight: bold;
-            text-align: center; color: var(--primary); margin: 20px 0;
+            text-align: center; color: var(--primary); margin: 15px 0;
         }
 
         /* Manual Entry Box */
@@ -145,18 +169,19 @@
         .list-item {
             padding: 12px; border: 1px solid var(--border); border-radius: 8px;
             margin-bottom: 8px; display: flex; justify-content: space-between;
-            align-items: center; background: var(--bg-color);
+            align-items: center; background: var(--bg-color); gap: 10px;
         }
-        .history-info { display: flex; flex-direction: column; }
+        .history-info { display: flex; flex-direction: column; flex: 1; }
         .history-skill { font-weight: bold; display: flex; align-items: center; gap: 6px; }
         .history-task { font-size: 0.9rem; margin-top: 2px; }
         .history-meta { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+        .history-right { display: flex; align-items: center; gap: 10px; }
         .history-time { font-family: monospace; font-weight: bold; font-size: 1.1rem; }
 
         /* Color Dot */
         .color-dot {
             display: inline-block; width: 12px; height: 12px;
-            border-radius: 50%; border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); flex-shrink: 0;
         }
         .skill-tag { background: var(--bar-bg); color: var(--text-main); padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; }
 
@@ -192,10 +217,23 @@
 
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
         
-        <!-- Bấm giờ & Nhập tay / Таймер и Ручной ввод -->
+        <!-- Bấm giờ & Pomodoro & Nhập tay -->
         <div class="card" style="grid-column: 1 / -1;">
-            <div class="card-title">Theo dõi <span class="text-ru">/ Трекинг</span></div>
-            <div class="flex-row">
+            <div class="card-title">
+                <span>Theo dõi <span class="text-ru">/ Трекинг</span></span>
+                <div class="timer-mode-switch" style="margin-bottom: 0;">
+                    <button id="modeStopwatchBtn" class="mode-btn active">Bấm giờ / Секундомер</button>
+                    <button id="modePomodoroBtn" class="mode-btn">Pomodoro 🍅</button>
+                </div>
+            </div>
+
+            <!-- Tùy chọn Pomodoro -->
+            <div id="pomoControls" class="pomo-sub-modes hidden">
+                <button id="pomoWorkBtn" class="pomo-tag active-work">Làm việc 25p / Работа</button>
+                <button id="pomoBreakBtn" class="pomo-tag">Nghỉ ngơi 5p / Отдых</button>
+            </div>
+
+            <div class="flex-row" id="taskInputRow">
                 <div class="flex-1">
                     <select id="skillSelect">
                         <option value="">-- Chọn kỹ năng / Выберите навык --</option>
@@ -206,11 +244,14 @@
                     <input type="text" id="taskInput" placeholder="Chi tiết công việc (không bắt buộc)...">
                 </div>
             </div>
+
             <div id="displayTime" class="timer-display">00:00:00</div>
-            <div style="text-align: center;">
+            
+            <div style="text-align: center; display: flex; justify-content: center; gap: 10px;">
                 <button id="toggleBtn" class="btn-primary" style="width: 200px; font-size: 1.2rem;">
                     Bắt đầu <span class="text-ru" style="margin-left: 5px;">/ Начать</span>
                 </button>
+                <button id="resetPomoBtn" class="btn-outline hidden" title="Đặt lại / Сбросить">↺</button>
             </div>
 
             <!-- Form Nhập tay số phút / Ручной ввод минут -->
@@ -308,7 +349,7 @@
         <div class="card">
             <div class="card-title">
                 <span>Lịch sử <span class="text-ru">/ История</span></span>
-                <button id="clearBtn" class="btn-outline btn-icon">Xóa / Очистить</button>
+                <button id="clearBtn" class="btn-outline btn-icon">Xóa tất cả / Очистить</button>
             </div>
             <ul id="activityList" class="list-container" style="max-height: 400px;">
                 <!-- Lịch sử render ở đây -->
@@ -329,7 +370,7 @@
     </div>
 </div>
 
-<!-- Thông báo hoàn thành mục tiêu -->
+<!-- Thông báo -->
 <div id="goalToast" class="toast"></div>
 
 <script>
@@ -339,15 +380,20 @@
     let elapsedTime = 0;
     let timerInterval;
     let currentStatsRange = 'today'; // today, week, month
-    let notifiedToday = {}; // Lưu trạng thái đã báo Beep trong ngày cho từng kỹ năng
+    let notifiedToday = {}; 
     
-    // Tạo màu ngẫu nhiên cho những kỹ năng chưa có màu
+    // Pomodoro State
+    let timerMode = 'stopwatch'; // 'stopwatch' | 'pomodoro'
+    let pomoType = 'work';       // 'work' (25m) | 'break' (5m)
+    const POMO_WORK_SECS = 25 * 60;
+    const POMO_BREAK_SECS = 5 * 60;
+    let pomoRemainingSecs = POMO_WORK_SECS;
+
     function getRandomColor() {
         const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6'];
         return colors[Math.floor(Math.random() * colors.length)];
     }
 
-    // Khởi tạo Data mặc định
     let appData = {
         skills: [
             { name: "Tiếng Nga / Русский язык", goal: 2, color: "#3b82f6" },
@@ -371,10 +417,19 @@
     const skillManagerList = document.getElementById('skillManagerList');
     const skillSelect = document.getElementById('skillSelect');
     
-    // Timer & Manual Entry
+    // Timer & Pomodoro
+    const modeStopwatchBtn = document.getElementById('modeStopwatchBtn');
+    const modePomodoroBtn = document.getElementById('modePomodoroBtn');
+    const pomoControls = document.getElementById('pomoControls');
+    const pomoWorkBtn = document.getElementById('pomoWorkBtn');
+    const pomoBreakBtn = document.getElementById('pomoBreakBtn');
+    const resetPomoBtn = document.getElementById('resetPomoBtn');
+    const taskInputRow = document.getElementById('taskInputRow');
     const taskInput = document.getElementById('taskInput');
     const displayTime = document.getElementById('displayTime');
     const toggleBtn = document.getElementById('toggleBtn');
+
+    // Manual Entry
     const manualSkillSelect = document.getElementById('manualSkillSelect');
     const manualMinutes = document.getElementById('manualMinutes');
     const manualTaskInput = document.getElementById('manualTaskInput');
@@ -397,19 +452,20 @@
     const exportBtn = document.getElementById('exportBtn');
     const importFile = document.getElementById('importFile');
 
-    // --- Âm thanh báo (Web Audio API - Offline 100%) ---
-    function playBeepSound() {
+    // --- Âm thanh báo (Web Audio API) ---
+    function playBeepSound(isPomodoroEnd = false) {
         if (!appData.soundEnabled) return;
         try {
             const AudioCtx = window.AudioContext || window.webkitAudioContext;
             const ctx = new AudioCtx();
+            const notes = isPomodoroEnd ? [523.25, 659.25, 783.99] : [523.25, 659.25];
             
-            // Phát 2 tiếng bíp vui tai
-            [0, 0.25].forEach((delay, index) => {
+            notes.forEach((freq, index) => {
+                const delay = index * 0.22;
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(index === 0 ? 523.25 : 659.25, ctx.currentTime + delay); // C5 -> E5
+                osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
                 
                 gain.gain.setValueAtTime(0.3, ctx.currentTime + delay);
                 gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + delay + 0.2);
@@ -420,9 +476,7 @@
                 osc.start(ctx.currentTime + delay);
                 osc.stop(ctx.currentTime + delay + 0.2);
             });
-        } catch (e) {
-            console.warn('Trình duyệt chặn tự động phát âm thanh:', e);
-        }
+        } catch (e) {}
     }
 
     function showToast(message) {
@@ -433,12 +487,10 @@
         }, 4000);
     }
 
-    // Kiểm tra xem kỹ năng đã đạt mục tiêu ngày chưa để phát âm báo
     function checkGoalCompletion(skillName, extraRunningSeconds = 0) {
         const todayStr = new Date().toDateString();
         const notifyKey = `${todayStr}_${skillName}`;
-        
-        if (notifiedToday[notifyKey]) return; // Đã báo trong hôm nay rồi thì bỏ qua
+        if (notifiedToday[notifyKey]) return;
 
         const skillObj = appData.skills.find(s => s.name === skillName);
         if (!skillObj || !skillObj.goal || skillObj.goal <= 0) return;
@@ -453,13 +505,20 @@
 
         if ((loggedTodaySeconds + extraRunningSeconds) >= targetSeconds) {
             notifiedToday[notifyKey] = true;
-            playBeepSound();
+            playBeepSound(false);
             showToast(`🎉 Hoàn thành mục tiêu: ${skillName}! / Цель достигнута!`);
         }
     }
 
     // --- Core Functions ---
     function formatTime(totalSeconds) {
+        const h = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        const s = String(totalSeconds % 60).padStart(2, '0');
+        return timerMode === 'pomodoro' && h === '00' ? `${m}:${s}` : `${h}:${m}:${s}`;
+    }
+
+    function formatFullTime(totalSeconds) {
         const h = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
         const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
         const s = String(totalSeconds % 60).padStart(2, '0');
@@ -473,9 +532,7 @@
     function saveData() {
         try {
             localStorage.setItem('skillTrackerData', JSON.stringify(appData));
-        } catch (e) {
-            console.error('Lỗi lưu trữ / Ошибка сохранения', e);
-        }
+        } catch (e) {}
     }
 
     function loadData() {
@@ -496,7 +553,6 @@
             }
         } catch (e) {}
         
-        // Đánh dấu trước những kỹ năng đã hoàn thành từ trước khi tải trang
         const todayStr = new Date().toDateString();
         appData.skills.forEach(s => {
             const targetSecs = (s.goal || 0) * 3600;
@@ -525,7 +581,6 @@
     }
 
     function renderSkills() {
-        // Cập nhật cả 2 Select box (Bấm giờ & Nhập tay)
         const defaultOption = '<option value="">-- Chọn kỹ năng / Выберите навык --</option>';
         skillSelect.innerHTML = defaultOption;
         manualSkillSelect.innerHTML = defaultOption;
@@ -542,7 +597,6 @@
             manualSkillSelect.appendChild(opt2);
         });
 
-        // Cập nhật danh sách Quản lý
         skillManagerList.innerHTML = '';
         appData.skills.forEach((skill, index) => {
             const li = document.createElement('li');
@@ -557,7 +611,7 @@
                         Mục tiêu: <span class="skill-tag">${skill.goal} h/ngày</span>
                     </div>
                 </div>
-                <button class="btn-outline btn-icon text-danger" onclick="deleteSkill(${index})" title="Xóa">✕</button>
+                <button class="btn-outline btn-icon" style="color: var(--danger);" onclick="deleteSkill(${index})" title="Xóa">✕</button>
             `;
             skillManagerList.appendChild(li);
         });
@@ -572,17 +626,39 @@
         }
     };
 
+    // Xóa từng dòng lịch sử (Xác nhận 2 lần)
+    window.deleteActivity = function(id, btnElement) {
+        if (btnElement.dataset.confirm === 'true') {
+            appData.activities = appData.activities.filter(a => a.id !== id);
+            saveData();
+            renderStatsAndHistory();
+        } else {
+            btnElement.dataset.confirm = 'true';
+            btnElement.textContent = 'Xác nhận?';
+            btnElement.style.background = 'var(--danger)';
+            btnElement.style.color = 'white';
+            btnElement.style.borderColor = 'var(--danger)';
+            
+            setTimeout(() => {
+                if (btnElement) {
+                    btnElement.dataset.confirm = 'false';
+                    btnElement.textContent = '✕';
+                    btnElement.style.background = '';
+                    btnElement.style.color = 'var(--text-muted)';
+                    btnElement.style.borderColor = '';
+                }
+            }, 3000);
+        }
+    };
+
     function isDateInRange(dateStr, rangeType) {
         const d = new Date(dateStr);
         const now = new Date();
         now.setHours(23, 59, 59, 999);
         
-        if (rangeType === 'today') {
-            return d.toDateString() === now.toDateString();
-        } 
+        if (rangeType === 'today') return d.toDateString() === now.toDateString();
         if (rangeType === 'week') {
-            const diffTime = now - d;
-            const diffDays = diffTime / (1000 * 60 * 60 * 24);
+            const diffDays = (now - d) / (1000 * 60 * 60 * 24);
             return diffDays >= 0 && diffDays <= 7;
         }
         if (rangeType === 'month') {
@@ -608,7 +684,6 @@
                 skillStats[act.skill] = (skillStats[act.skill] || 0) + act.duration;
             }
 
-            // Render History
             if (activityList.children.length < 50) {
                 const dateObj = new Date(act.date);
                 const skillObj = appData.skills.find(s => s.name === act.skill);
@@ -623,9 +698,12 @@
                             ${act.skill}
                         </span>
                         ${act.task ? `<span class="history-task">${act.task}</span>` : ''}
-                        <span class="history-meta">${dateObj.toLocaleTimeString('vi-VN')} - ${dateObj.toLocaleDateString('vi-VN')}</span>
+                        <span class="history-meta">${dateObj.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})} - ${dateObj.toLocaleDateString('vi-VN')}</span>
                     </div>
-                    <div class="history-time">${formatTime(act.duration)}</div>
+                    <div class="history-right">
+                        <div class="history-time">${formatFullTime(act.duration)}</div>
+                        <button class="btn-outline btn-icon" style="color: var(--text-muted);" onclick="deleteActivity('${act.id}', this)" title="Xóa dòng này">✕</button>
+                    </div>
                 `;
                 activityList.appendChild(li);
             }
@@ -633,7 +711,7 @@
 
         update24hCharts(totalSecsToday);
 
-        periodTotalTime.textContent = formatTime(periodSecsTotal);
+        periodTotalTime.textContent = formatFullTime(periodSecsTotal);
         statsContainer.innerHTML = '';
 
         if (Object.keys(skillStats).length === 0) {
@@ -695,8 +773,68 @@
         actualWorkedText.textContent = `${workedHours}h`;
     }
 
-    // --- Event Handlers ---
+    // --- Pomodoro & Stopwatch Mode Switching ---
+    function switchTimerMode(mode) {
+        if (isRunning) {
+            alert('Vui lòng dừng đồng hồ trước khi đổi chế độ! / Остановите таймер перед сменой режима!');
+            return;
+        }
+        timerMode = mode;
+        document.getElementById('selectError').style.display = 'none';
 
+        if (mode === 'stopwatch') {
+            modeStopwatchBtn.classList.add('active');
+            modePomodoroBtn.classList.remove('active');
+            pomoControls.classList.add('hidden');
+            resetPomoBtn.classList.add('hidden');
+            taskInputRow.classList.remove('hidden');
+            displayTime.style.color = 'var(--primary)';
+            displayTime.textContent = '00:00:00';
+        } else {
+            modePomodoroBtn.classList.add('active');
+            modeStopwatchBtn.classList.remove('active');
+            pomoControls.classList.remove('hidden');
+            resetPomoBtn.classList.remove('hidden');
+            setPomoType('work');
+        }
+    }
+
+    function setPomoType(type) {
+        if (isRunning) return;
+        pomoType = type;
+        if (type === 'work') {
+            pomoWorkBtn.className = 'pomo-tag active-work';
+            pomoBreakBtn.className = 'pomo-tag';
+            taskInputRow.classList.remove('hidden');
+            pomoRemainingSecs = POMO_WORK_SECS;
+            displayTime.style.color = 'var(--primary)';
+        } else {
+            pomoBreakBtn.className = 'pomo-tag active-break';
+            pomoWorkBtn.className = 'pomo-tag';
+            taskInputRow.classList.add('hidden'); // Nghỉ ngơi thì không cần chọn kỹ năng
+            pomoRemainingSecs = POMO_BREAK_SECS;
+            displayTime.style.color = 'var(--success)';
+        }
+        displayTime.textContent = formatTime(pomoRemainingSecs);
+    }
+
+    modeStopwatchBtn.addEventListener('click', () => switchTimerMode('stopwatch'));
+    modePomodoroBtn.addEventListener('click', () => switchTimerMode('pomodoro'));
+    pomoWorkBtn.addEventListener('click', () => setPomoType('work'));
+    pomoBreakBtn.addEventListener('click', () => setPomoType('break'));
+    resetPomoBtn.addEventListener('click', () => {
+        if (isRunning) {
+            clearInterval(timerInterval);
+            isRunning = false;
+            skillSelect.disabled = false;
+            taskInput.disabled = false;
+            toggleBtn.innerHTML = 'Bắt đầu <span class="text-ru" style="margin-left: 5px;">/ Начать</span>';
+            toggleBtn.className = 'btn-primary';
+        }
+        setPomoType(pomoType);
+    });
+
+    // --- Event Handlers ---
     themeBtn.addEventListener('click', () => {
         applyTheme(appData.theme === 'light' ? 'dark' : 'light');
     });
@@ -705,7 +843,7 @@
         appData.soundEnabled = !appData.soundEnabled;
         updateSoundButton();
         saveData();
-        if (appData.soundEnabled) playBeepSound(); // Phát thử tiếng bíp khi bật
+        if (appData.soundEnabled) playBeepSound(false);
     });
 
     addSkillBtn.addEventListener('click', () => {
@@ -733,7 +871,7 @@
         newSkillColor.value = getRandomColor();
     });
 
-    // Nhập tay số phút / Ручной ввод
+    // Nhập tay số phút
     addManualBtn.addEventListener('click', () => {
         const skill = manualSkillSelect.value;
         const mins = parseInt(manualMinutes.value);
@@ -756,7 +894,7 @@
 
         saveData();
         renderStatsAndHistory();
-        checkGoalCompletion(skill, 0); // Kiểm tra đạt mục tiêu ngay sau khi nhập tay
+        checkGoalCompletion(skill, 0);
 
         manualMinutes.value = '';
         manualTaskInput.value = '';
@@ -766,30 +904,98 @@
         tab.addEventListener('click', (e) => {
             statsTabs.forEach(t => t.classList.remove('active'));
             e.target.classList.add('active');
-            
             currentStatsRange = e.target.dataset.range;
             renderStatsAndHistory();
         });
     });
 
-    // Timer Logic
+    // Timer Logic (Hỗ trợ cả Bấm giờ & Pomodoro)
+    function finishSession(durationSecs, isAutoFinish = false) {
+        isRunning = false;
+        clearInterval(timerInterval);
+        
+        if (timerMode === 'stopwatch' || (timerMode === 'pomodoro' && pomoType === 'work')) {
+            const finishedSkill = skillSelect.value;
+            if (durationSecs > 0 && finishedSkill) {
+                const rawTask = taskInput.value.trim();
+                const finalTask = timerMode === 'pomodoro' 
+                    ? (rawTask ? `${rawTask} 🍅` : 'Pomodoro 🍅') 
+                    : rawTask;
+
+                appData.activities.unshift({
+                    id: Date.now().toString(),
+                    skill: finishedSkill,
+                    task: finalTask,
+                    duration: durationSecs,
+                    date: new Date().toISOString()
+                });
+                saveData();
+                renderStatsAndHistory();
+                checkGoalCompletion(finishedSkill, 0);
+            }
+        }
+
+        if (isAutoFinish) {
+            playBeepSound(true);
+            if (pomoType === 'work') {
+                showToast('🍅 Hết phiên làm việc! Nghỉ 5 phút nhé! / Время отдыха!');
+                setPomoType('break');
+            } else {
+                showToast('⚡ Hết giờ nghỉ! Quay lại làm việc thôi! / Пора работать!');
+                setPomoType('work');
+            }
+        } else {
+            if (timerMode === 'stopwatch') {
+                elapsedTime = 0;
+                displayTime.textContent = '00:00:00';
+            } else {
+                setPomoType(pomoType);
+            }
+        }
+
+        taskInput.value = ''; 
+        skillSelect.disabled = false;
+        taskInput.disabled = false;
+        toggleBtn.innerHTML = 'Bắt đầu <span class="text-ru" style="margin-left: 5px;">/ Начать</span>';
+        toggleBtn.className = 'btn-primary';
+    }
+
     toggleBtn.addEventListener('click', () => {
         if (!isRunning) {
-            const selectedSkill = skillSelect.value;
-            if (!selectedSkill) {
-                document.getElementById('selectError').style.display = 'block';
-                return;
+            // Validate nếu cần chọn kỹ năng
+            if (timerMode === 'stopwatch' || (timerMode === 'pomodoro' && pomoType === 'work')) {
+                if (!skillSelect.value) {
+                    document.getElementById('selectError').style.display = 'block';
+                    return;
+                }
             }
             document.getElementById('selectError').style.display = 'none';
             
             isRunning = true;
             startTime = Date.now();
+            const initialPomoSecs = pomoRemainingSecs;
+
             timerInterval = setInterval(() => {
-                const currentElapsed = elapsedTime + Math.floor((Date.now() - startTime) / 1000);
-                displayTime.textContent = formatTime(currentElapsed);
+                const diffSecs = Math.floor((Date.now() - startTime) / 1000);
                 
-                // Kiểm tra real-time xem đã chạm mốc mục tiêu chưa để báo Beep
-                checkGoalCompletion(selectedSkill, currentElapsed);
+                if (timerMode === 'stopwatch') {
+                    const currentElapsed = elapsedTime + diffSecs;
+                    displayTime.textContent = formatTime(currentElapsed);
+                    checkGoalCompletion(skillSelect.value, currentElapsed);
+                } else {
+                    // Đếm ngược Pomodoro
+                    const left = initialPomoSecs - diffSecs;
+                    if (left <= 0) {
+                        displayTime.textContent = '00:00';
+                        finishSession(initialPomoSecs, true);
+                    } else {
+                        pomoRemainingSecs = left;
+                        displayTime.textContent = formatTime(left);
+                        if (pomoType === 'work') {
+                            checkGoalCompletion(skillSelect.value, diffSecs);
+                        }
+                    }
+                }
             }, 1000);
             
             toggleBtn.innerHTML = 'Dừng lại <span class="text-ru" style="margin-left: 5px;">/ Остановить</span>';
@@ -797,31 +1003,10 @@
             skillSelect.disabled = true;
             taskInput.disabled = true;
         } else {
-            isRunning = false;
-            clearInterval(timerInterval);
-            const duration = Math.floor((Date.now() - startTime) / 1000) + elapsedTime;
-            const finishedSkill = skillSelect.value;
-            
-            if (duration > 0) {
-                appData.activities.unshift({
-                    id: Date.now().toString(),
-                    skill: finishedSkill,
-                    task: taskInput.value.trim(),
-                    duration: duration,
-                    date: new Date().toISOString()
-                });
-                saveData();
-                renderStatsAndHistory();
-                checkGoalCompletion(finishedSkill, 0);
-            }
-
-            elapsedTime = 0; 
-            displayTime.textContent = '00:00:00';
-            taskInput.value = ''; 
-            skillSelect.disabled = false;
-            taskInput.disabled = false;
-            toggleBtn.innerHTML = 'Bắt đầu <span class="text-ru" style="margin-left: 5px;">/ Начать</span>';
-            toggleBtn.className = 'btn-primary';
+            // Dừng thủ công
+            const diffSecs = Math.floor((Date.now() - startTime) / 1000);
+            const totalDuration = timerMode === 'stopwatch' ? (diffSecs + elapsedTime) : diffSecs;
+            finishSession(totalDuration, false);
         }
     });
 
