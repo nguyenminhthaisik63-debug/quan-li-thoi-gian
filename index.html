@@ -65,6 +65,7 @@
             font-size: 1.1rem; font-weight: bold; margin-bottom: 15px;
             padding-bottom: 10px; border-bottom: 1px solid var(--border);
             display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 8px;
         }
 
         /* Form & Inputs */
@@ -99,7 +100,7 @@
 
         /* Timer & Pomodoro */
         .timer-mode-switch {
-            display: flex; justify-content: center; gap: 10px; margin-bottom: 15px;
+            display: flex; justify-content: center; gap: 8px;
         }
         .mode-btn {
             padding: 6px 14px; border-radius: 20px; font-size: 0.9rem;
@@ -110,14 +111,22 @@
         }
 
         .pomo-sub-modes {
-            display: flex; justify-content: center; gap: 8px; margin-bottom: 10px;
+            display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
         }
         .pomo-tag {
-            padding: 4px 12px; border-radius: 6px; font-size: 0.85rem; cursor: pointer;
+            padding: 6px 12px; border-radius: 8px; font-size: 0.9rem; cursor: pointer;
             border: 1px solid var(--border); background: transparent; color: var(--text-main);
         }
         .pomo-tag.active-work { background: var(--primary); color: white; border-color: var(--primary); }
         .pomo-tag.active-break { background: var(--success); color: white; border-color: var(--success); }
+
+        .pomo-settings {
+            display: flex; align-items: center; gap: 6px; font-size: 0.85rem;
+            background: var(--bg-color); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--border);
+        }
+        .pomo-settings input {
+            width: 55px; padding: 4px; text-align: center; font-size: 0.9rem;
+        }
 
         .timer-display {
             font-size: 3.5rem; font-family: monospace; font-weight: bold;
@@ -148,7 +157,39 @@
         .progress-bg { background: var(--bar-bg); height: 14px; border-radius: 7px; overflow: hidden; }
         .progress-fill { height: 100%; border-radius: 7px; transition: width 0.5s, background-color 0.3s; }
 
-        /* Charts */
+        /* 7-Day Bar Chart (CSS Thuần) */
+        .bar-chart-wrap {
+            display: flex; align-items: flex-end; justify-content: space-between;
+            height: 170px; padding: 25px 10px 5px 10px; border-bottom: 2px solid var(--border);
+            gap: 8px; margin-top: 10px;
+        }
+        .bar-col {
+            flex: 1; display: flex; flex-direction: column; align-items: center;
+            height: 100%; justify-content: flex-end; position: relative;
+        }
+        .bar-val {
+            font-size: 0.75rem; font-weight: bold; color: var(--text-muted);
+            margin-bottom: 4px; font-family: monospace;
+        }
+        .bar-fill {
+            width: 100%; max-width: 38px; background: var(--primary);
+            border-radius: 6px 6px 0 0; transition: height 0.4s ease;
+            min-height: 4px; opacity: 0.85;
+        }
+        .bar-fill.today {
+            background: var(--success); opacity: 1;
+        }
+        .bar-labels-row {
+            display: flex; justify-content: space-between; padding: 8px 10px 0 10px; gap: 8px;
+        }
+        .bar-label {
+            flex: 1; text-align: center; font-size: 0.8rem; color: var(--text-muted);
+        }
+        .bar-label.today {
+            font-weight: bold; color: var(--success);
+        }
+
+        /* Pie Charts */
         .charts-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-around; }
         .chart-box { text-align: center; flex: 1; min-width: 180px; }
         .pie-chart {
@@ -162,6 +203,15 @@
             width: 90px; height: 90px;
             background: var(--card-bg); border-radius: 50%;
             transition: background 0.3s;
+        }
+        .chart-legend {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+            margin-top: 10px; font-size: 0.8rem;
+        }
+        .legend-item {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: var(--bg-color); padding: 2px 8px; border-radius: 10px;
+            border: 1px solid var(--border);
         }
 
         /* Lists (Skills & History) */
@@ -195,6 +245,25 @@
         }
         .toast.show { transform: translateY(0); opacity: 1; }
 
+        /* Streak Badge */
+        .streak-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: rgba(245, 158, 11, 0.15); color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 0.95rem;
+        }
+
+        /* Checklist & Edit Form */
+        .todo-item {
+            padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+            margin-bottom: 8px; display: flex; justify-content: space-between;
+            align-items: center; background: var(--bg-color); gap: 10px;
+        }
+        .todo-left { display: flex; align-items: center; gap: 10px; flex: 1; cursor: pointer; }
+        .todo-left input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--success); }
+        .todo-done { text-decoration: line-through; opacity: 0.6; }
+        .edit-inline-box { display: flex; flex-wrap: wrap; gap: 6px; width: 100%; align-items: center; }
+
         /* Utilities */
         .text-ru { font-size: 0.85em; opacity: 0.8; font-weight: normal; }
         .hidden { display: none !important; }
@@ -209,7 +278,8 @@
             <h2>Kỹ năng & Thời gian</h2>
             <div class="text-ru">Навыки и Время</div>
         </div>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <div id="streakBadge" class="streak-badge" title="Số ngày liên tiếp đạt mục tiêu / Дней подряд с выполненной целью">🔥 0 ngày</div>
             <button id="soundToggleBtn" class="btn-outline" title="Bật/Tắt âm thanh báo">Âm báo: Bật 🔔</button>
             <button id="themeBtn" class="btn-outline">Sáng/Tối 🌓</button>
         </div>
@@ -221,16 +291,24 @@
         <div class="card" style="grid-column: 1 / -1;">
             <div class="card-title">
                 <span>Theo dõi <span class="text-ru">/ Трекинг</span></span>
-                <div class="timer-mode-switch" style="margin-bottom: 0;">
+                <div class="timer-mode-switch">
                     <button id="modeStopwatchBtn" class="mode-btn active">Bấm giờ / Секундомер</button>
                     <button id="modePomodoroBtn" class="mode-btn">Pomodoro 🍅</button>
                 </div>
             </div>
 
-            <!-- Tùy chọn Pomodoro -->
+            <!-- Tùy chọn & Cài đặt phút Pomodoro -->
             <div id="pomoControls" class="pomo-sub-modes hidden">
-                <button id="pomoWorkBtn" class="pomo-tag active-work">Làm việc 25p / Работа</button>
-                <button id="pomoBreakBtn" class="pomo-tag">Nghỉ ngơi 5p / Отдых</button>
+                <button id="pomoWorkBtn" class="pomo-tag active-work">Làm việc / Работа</button>
+                <button id="pomoBreakBtn" class="pomo-tag">Nghỉ ngơi / Отдых</button>
+                
+                <div class="pomo-settings">
+                    <span>Làm:</span>
+                    <input type="number" id="pomoWorkMinsInput" value="25" min="1" max="180">
+                    <span>p | Nghỉ:</span>
+                    <input type="number" id="pomoBreakMinsInput" value="5" min="1" max="60">
+                    <span>p</span>
+                </div>
             </div>
 
             <div class="flex-row" id="taskInputRow">
@@ -309,22 +387,53 @@
                     <strong>Mục tiêu tổng <span class="text-ru">/ Общая цель</span></strong>
                     <div id="goalChart" class="pie-chart"></div>
                     <div class="chart-controls">
-                        Tổng cộng: <strong id="totalGoalText" style="color: var(--primary);">0h</strong>
+                        Tổng cộng: <strong id="totalGoalText" style="color: var(--primary);">0h</strong> / 24h
                     </div>
+                    <div id="goalLegend" class="chart-legend"></div>
                 </div>
                 <div class="chart-box">
-                    <strong>Thực tế <span class="text-ru">/ Фактически</span></strong>
+                    <strong>Thực tế hôm nay <span class="text-ru">/ Фактически</span></strong>
                     <div id="actualChart" class="pie-chart"></div>
                     <div class="chart-controls">
-                        Đã làm: <strong id="actualWorkedText" style="color: var(--success);">0h</strong>
+                        Đã làm: <strong id="actualWorkedText" style="color: var(--success);">0h</strong> / 24h
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ tròn tỷ lệ phân bổ thời gian giữa các kỹ năng -->
+        <div class="card" style="grid-column: 1 / -1;">
+            <div class="card-title">
+                <span>Tỷ lệ thời gian theo kỹ năng <span class="text-ru">/ Доля времени по навыкам (%)</span></span>
+                <span id="ratioRangeLabel" style="font-size: 0.85rem; font-weight: normal; color: var(--text-muted);">Hôm nay</span>
+            </div>
+            <div class="charts-container" style="align-items: center;">
+                <div class="chart-box" style="max-width: 220px;">
+                    <div id="skillRatioChart" class="pie-chart" style="width: 160px; height: 160px;"></div>
+                </div>
+                <div id="skillRatioLegend" style="flex: 2; min-width: 240px; display: flex; flex-direction: column; gap: 8px;">
+                    <!-- Danh sách % từng kỹ năng render bằng JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ cột 7 ngày gần nhất / График за 7 дней -->
+        <div class="card" style="grid-column: 1 / -1;">
+            <div class="card-title">
+                <span>Tiến độ 7 ngày gần nhất <span class="text-ru">/ Прогресс за 7 дней</span></span>
+                <span style="font-size: 0.85rem; font-weight: normal; color: var(--text-muted);">Đơn vị: Giờ (ч)</span>
+            </div>
+            <div id="weeklyBarChart" class="bar-chart-wrap">
+                <!-- Cột vẽ bằng JS -->
+            </div>
+            <div id="weeklyBarLabels" class="bar-labels-row">
+                <!-- Nhãn ngày vẽ bằng JS -->
             </div>
         </div>
     </div>
 
     <!-- Thống kê & Lịch sử -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 20px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
         
         <!-- Thống kê theo Tab -->
         <div class="card">
@@ -349,7 +458,12 @@
         <div class="card">
             <div class="card-title">
                 <span>Lịch sử <span class="text-ru">/ История</span></span>
-                <button id="clearBtn" class="btn-outline btn-icon">Xóa tất cả / Очистить</button>
+                <div style="display: flex; gap: 6px; align-items: center;">
+                    <select id="historyFilterSelect" style="padding: 4px 8px; font-size: 0.85rem; width: auto; max-width: 150px;">
+                        <option value="ALL">Tất cả / Все</option>
+                    </select>
+                    <button id="clearBtn" class="btn-outline btn-icon">Xóa tất cả</button>
+                </div>
             </div>
             <ul id="activityList" class="list-container" style="max-height: 400px;">
                 <!-- Lịch sử render ở đây -->
@@ -357,10 +471,28 @@
         </div>
     </div>
 
+    <!-- Ghi chú nhanh & Mục tiêu tuần / Быстрые заметки и цели на неделю -->
+    <div class="card">
+        <div class="card-title">
+            <span>Ghi chú & Mục tiêu tuần <span class="text-ru">/ Заметки и цели на неделю</span></span>
+            <span id="todoProgressText" style="font-size: 0.85rem; color: var(--success);">0/0 hoàn thành</span>
+        </div>
+        <div class="flex-row">
+            <div class="flex-1">
+                <input type="text" id="newTodoInput" placeholder="Thêm việc cần làm trong tuần (VD: Ôn 50 từ vựng tiếng Nga)...">
+            </div>
+            <button id="addTodoBtn" class="btn-primary">Thêm <span class="text-ru">/ Добавить</span></button>
+        </div>
+        <ul id="todoList" class="list-container" style="max-height: 250px;">
+            <!-- Checklist render ở đây -->
+        </ul>
+    </div>
+
     <!-- Sao lưu / Резервное копирование -->
     <div class="card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
         <span class="text-muted" style="font-size: 0.9rem;">Dữ liệu lưu offline / Данные сохранены локально</span>
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button id="exportCsvBtn" class="btn-outline" style="border-color: var(--success); color: var(--success);">Xuất CSV/Excel 📊</button>
             <button id="exportBtn" class="btn-outline">Xuất JSON 📥</button>
             <label class="btn-outline" style="cursor: pointer;">
                 Nhập JSON 📤
@@ -384,10 +516,8 @@
     
     // Pomodoro State
     let timerMode = 'stopwatch'; // 'stopwatch' | 'pomodoro'
-    let pomoType = 'work';       // 'work' (25m) | 'break' (5m)
-    const POMO_WORK_SECS = 25 * 60;
-    const POMO_BREAK_SECS = 5 * 60;
-    let pomoRemainingSecs = POMO_WORK_SECS;
+    let pomoType = 'work';       // 'work' | 'break'
+    let pomoRemainingSecs = 25 * 60;
 
     function getRandomColor() {
         const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6'];
@@ -400,13 +530,17 @@
             { name: "Lập trình / Программирование", goal: 4, color: "#10b981" }
         ],
         activities: [],
+        todos: [],
         theme: 'light',
-        soundEnabled: true
+        soundEnabled: true,
+        pomoWorkMins: 25,
+        pomoBreakMins: 5
     };
 
     // --- DOM Elements ---
     const themeBtn = document.getElementById('themeBtn');
     const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const streakBadge = document.getElementById('streakBadge');
     const goalToast = document.getElementById('goalToast');
     
     // Skill Management
@@ -423,6 +557,8 @@
     const pomoControls = document.getElementById('pomoControls');
     const pomoWorkBtn = document.getElementById('pomoWorkBtn');
     const pomoBreakBtn = document.getElementById('pomoBreakBtn');
+    const pomoWorkMinsInput = document.getElementById('pomoWorkMinsInput');
+    const pomoBreakMinsInput = document.getElementById('pomoBreakMinsInput');
     const resetPomoBtn = document.getElementById('resetPomoBtn');
     const taskInputRow = document.getElementById('taskInputRow');
     const taskInput = document.getElementById('taskInput');
@@ -438,17 +574,31 @@
     // Charts
     const totalGoalText = document.getElementById('totalGoalText');
     const goalChart = document.getElementById('goalChart');
+    const goalLegend = document.getElementById('goalLegend');
     const actualChart = document.getElementById('actualChart');
     const actualWorkedText = document.getElementById('actualWorkedText');
+    const skillRatioChart = document.getElementById('skillRatioChart');
+    const skillRatioLegend = document.getElementById('skillRatioLegend');
+    const ratioRangeLabel = document.getElementById('ratioRangeLabel');
+    const weeklyBarChart = document.getElementById('weeklyBarChart');
+    const weeklyBarLabels = document.getElementById('weeklyBarLabels');
     
     // Stats & History
     const statsTabs = document.getElementById('statsTabs').querySelectorAll('.tab-btn');
     const statsContainer = document.getElementById('statsContainer');
     const periodTotalTime = document.getElementById('periodTotalTime');
+    const historyFilterSelect = document.getElementById('historyFilterSelect');
     const activityList = document.getElementById('activityList');
     const clearBtn = document.getElementById('clearBtn');
+
+    // Checklist / Todos
+    const newTodoInput = document.getElementById('newTodoInput');
+    const addTodoBtn = document.getElementById('addTodoBtn');
+    const todoList = document.getElementById('todoList');
+    const todoProgressText = document.getElementById('todoProgressText');
     
     // Import/Export
+    const exportCsvBtn = document.getElementById('exportCsvBtn');
     const exportBtn = document.getElementById('exportBtn');
     const importFile = document.getElementById('importFile');
 
@@ -478,9 +628,9 @@
             });
         } catch (e) {}
     }
-
-    function showToast(message) {
+    function showToast(message, isError = false) {
         goalToast.textContent = message;
+        goalToast.style.background = isError ? 'var(--danger)' : 'var(--success)';
         goalToast.classList.add('show');
         setTimeout(() => {
             goalToast.classList.remove('show');
@@ -548,11 +698,18 @@
                     });
                 }
                 appData.activities = parsed.activities || [];
+                appData.todos = parsed.todos || [];
                 appData.theme = parsed.theme || 'light';
                 appData.soundEnabled = parsed.soundEnabled !== undefined ? parsed.soundEnabled : true;
+                appData.pomoWorkMins = parsed.pomoWorkMins || 25;
+                appData.pomoBreakMins = parsed.pomoBreakMins || 5;
             }
         } catch (e) {}
         
+        pomoWorkMinsInput.value = appData.pomoWorkMins;
+        pomoBreakMinsInput.value = appData.pomoBreakMins;
+        pomoRemainingSecs = appData.pomoWorkMins * 60;
+
         const todayStr = new Date().toDateString();
         appData.skills.forEach(s => {
             const targetSecs = (s.goal || 0) * 3600;
@@ -567,6 +724,7 @@
         updateSoundButton();
         renderSkills();
         renderStatsAndHistory();
+        renderTodos();
     }
 
     // --- Render Functions ---
@@ -582,8 +740,10 @@
 
     function renderSkills() {
         const defaultOption = '<option value="">-- Chọn kỹ năng / Выберите навык --</option>';
+        const currentFilter = historyFilterSelect.value || 'ALL';
         skillSelect.innerHTML = defaultOption;
         manualSkillSelect.innerHTML = defaultOption;
+        historyFilterSelect.innerHTML = '<option value="ALL">Tất cả / Все</option>';
 
         appData.skills.forEach(skill => {
             const opt1 = document.createElement('option');
@@ -595,7 +755,16 @@
             opt2.value = skill.name;
             opt2.textContent = skill.name;
             manualSkillSelect.appendChild(opt2);
+
+            const opt3 = document.createElement('option');
+            opt3.value = skill.name;
+            opt3.textContent = skill.name;
+            historyFilterSelect.appendChild(opt3);
         });
+
+        if (Array.from(historyFilterSelect.options).some(o => o.value === currentFilter)) {
+            historyFilterSelect.value = currentFilter;
+        }
 
         skillManagerList.innerHTML = '';
         appData.skills.forEach((skill, index) => {
@@ -611,19 +780,68 @@
                         Mục tiêu: <span class="skill-tag">${skill.goal} h/ngày</span>
                     </div>
                 </div>
-                <button class="btn-outline btn-icon" style="color: var(--danger);" onclick="deleteSkill(${index})" title="Xóa">✕</button>
+                <button class="btn-outline btn-icon" style="color: var(--danger);" onclick="deleteSkill(${index}, this)" title="Xóa">✕</button>
             `;
             skillManagerList.appendChild(li);
         });
     }
 
-    window.deleteSkill = function(index) {
-        if (confirm(`Xóa kỹ năng "${appData.skills[index].name}"?\n(Lịch sử cũ vẫn được giữ lại)`)) {
+    window.deleteSkill = function(index, btnElement) {
+        if (btnElement.dataset.confirm === 'true') {
             appData.skills.splice(index, 1);
             saveData();
             renderSkills();
             renderStatsAndHistory();
+            showToast('Đã xóa kỹ năng! / Навык удален!');
+        } else {
+            btnElement.dataset.confirm = 'true';
+            btnElement.textContent = 'Xóa?';
+            btnElement.style.background = 'var(--danger)';
+            btnElement.style.color = 'white';
+            setTimeout(() => {
+                if (btnElement) {
+                    btnElement.dataset.confirm = 'false';
+                    btnElement.textContent = '✕';
+                    btnElement.style.background = '';
+                    btnElement.style.color = 'var(--danger)';
+                }
+            }, 3000);
         }
+    };
+
+    // Chỉnh sửa trực tiếp một dòng lịch sử
+    let editingActivityId = null;
+
+    window.startEditActivity = function(id) {
+        editingActivityId = id;
+        renderStatsAndHistory();
+    };
+
+    window.cancelEditActivity = function() {
+        editingActivityId = null;
+        renderStatsAndHistory();
+    };
+
+    window.saveEditActivity = function(id) {
+        const taskEl = document.getElementById(`edit-task-${id}`);
+        const minsEl = document.getElementById(`edit-mins-${id}`);
+        const newTask = taskEl ? taskEl.value.trim() : '';
+        const newMins = minsEl ? parseInt(minsEl.value) : 0;
+
+        if (isNaN(newMins) || newMins <= 0) {
+            showToast('Số phút phải lớn hơn 0! / Минуты должны быть > 0!', true);
+            return;
+        }
+
+        const act = appData.activities.find(a => a.id === id);
+        if (act) {
+            act.task = newTask;
+            act.duration = newMins * 60;
+            saveData();
+            showToast('Đã cập nhật lịch sử! / Запись обновлена!');
+        }
+        editingActivityId = null;
+        renderStatsAndHistory();
     };
 
     // Xóa từng dòng lịch sử (Xác nhận 2 lần)
@@ -672,6 +890,7 @@
         let totalSecsToday = 0;   
         let periodSecsTotal = 0;  
         let skillStats = {};      
+        const selectedFilter = historyFilterSelect.value || 'ALL';
 
         appData.activities.forEach(act => {
             const isToday = isDateInRange(act.date, 'today');
@@ -684,32 +903,56 @@
                 skillStats[act.skill] = (skillStats[act.skill] || 0) + act.duration;
             }
 
-            if (activityList.children.length < 50) {
+            const matchesFilter = (selectedFilter === 'ALL' || act.skill === selectedFilter);
+            if (matchesFilter && activityList.children.length < 50) {
                 const dateObj = new Date(act.date);
                 const skillObj = appData.skills.find(s => s.name === act.skill);
                 const skillColor = skillObj ? skillObj.color : '#9ca3af';
 
                 const li = document.createElement('li');
                 li.className = 'list-item';
-                li.innerHTML = `
-                    <div class="history-info">
-                        <span class="history-skill">
+
+                if (editingActivityId === act.id) {
+                    const currentMins = Math.max(1, Math.round(act.duration / 60));
+                    li.innerHTML = `
+                        <div class="edit-inline-box">
                             <span class="color-dot" style="background-color: ${skillColor};"></span>
-                            ${act.skill}
-                        </span>
-                        ${act.task ? `<span class="history-task">${act.task}</span>` : ''}
-                        <span class="history-meta">${dateObj.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})} - ${dateObj.toLocaleDateString('vi-VN')}</span>
-                    </div>
-                    <div class="history-right">
-                        <div class="history-time">${formatFullTime(act.duration)}</div>
-                        <button class="btn-outline btn-icon" style="color: var(--text-muted);" onclick="deleteActivity('${act.id}', this)" title="Xóa dòng này">✕</button>
-                    </div>
-                `;
+                            <input type="text" id="edit-task-${act.id}" value="${(act.task || '').replace(/"/g, '&quot;')}" placeholder="Ghi chú..." style="flex: 2; min-width: 120px; padding: 6px 8px; font-size: 0.9rem;">
+                            <input type="number" id="edit-mins-${act.id}" value="${currentMins}" min="1" max="1440" style="width: 75px; padding: 6px 8px; font-size: 0.9rem;">
+                            <span style="font-size: 0.85rem; color: var(--text-muted);">phút</span>
+                            <button class="btn-success btn-icon" onclick="saveEditActivity('${act.id}')" title="Lưu">✓</button>
+                            <button class="btn-outline btn-icon" onclick="cancelEditActivity()" title="Hủy">✕</button>
+                        </div>
+                    `;
+                } else {
+                    li.innerHTML = `
+                        <div class="history-info">
+                            <span class="history-skill">
+                                <span class="color-dot" style="background-color: ${skillColor};"></span>
+                                ${act.skill}
+                            </span>
+                            ${act.task ? `<span class="history-task">${act.task}</span>` : ''}
+                            <span class="history-meta">${dateObj.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})} - ${dateObj.toLocaleDateString('vi-VN')}</span>
+                        </div>
+                        <div class="history-right">
+                            <div class="history-time">${formatFullTime(act.duration)}</div>
+                            <button class="btn-outline btn-icon" style="color: var(--primary);" onclick="startEditActivity('${act.id}')" title="Sửa dòng này">✎</button>
+                            <button class="btn-outline btn-icon" style="color: var(--text-muted);" onclick="deleteActivity('${act.id}', this)" title="Xóa dòng này">✕</button>
+                        </div>
+                    `;
+                }
                 activityList.appendChild(li);
             }
         });
 
+        if (activityList.children.length === 0) {
+            activityList.innerHTML = '<li style="text-align: center; color: var(--text-muted); padding: 20px;">Chưa có lịch sử phù hợp / Нет записей</li>';
+        }
+
         update24hCharts(totalSecsToday);
+        renderSkillRatioChart(skillStats, periodSecsTotal);
+        renderWeeklyBarChart();
+        updateStreak();
 
         periodTotalTime.textContent = formatFullTime(periodSecsTotal);
         statsContainer.innerHTML = '';
@@ -757,12 +1000,80 @@
         }
     }
 
+    // Vẽ biểu đồ cột 7 ngày gần nhất
+    function renderWeeklyBarChart() {
+        weeklyBarChart.innerHTML = '';
+        weeklyBarLabels.innerHTML = '';
+
+        const daysData = [];
+        const today = new Date();
+        let maxHours = 1; // Tối thiểu 1h để chia tỷ lệ cột cho đẹp
+
+        for (let i = 6; i >= 0; i--) {
+            const d = new Date(today);
+            d.setDate(today.getDate() - i);
+            const dateStr = d.toDateString();
+            const isToday = (i === 0);
+
+            const totalSecs = appData.activities.reduce((sum, act) => {
+                return (new Date(act.date).toDateString() === dateStr) ? sum + act.duration : sum;
+            }, 0);
+
+            const hours = parseFloat((totalSecs / 3600).toFixed(1));
+            if (hours > maxHours) maxHours = hours;
+
+            const label = isToday ? 'Hôm nay' : `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
+            daysData.push({ label, hours, isToday });
+        }
+
+        daysData.forEach(item => {
+            const heightPercent = Math.round((item.hours / maxHours) * 100);
+            
+            const col = document.createElement('div');
+            col.className = 'bar-col';
+            col.innerHTML = `
+                <div class="bar-val">${item.hours > 0 ? item.hours + 'h' : ''}</div>
+                <div class="bar-fill ${item.isToday ? 'today' : ''}" style="height: ${item.hours > 0 ? Math.max(heightPercent, 6) : 3}%;"></div>
+            `;
+            weeklyBarChart.appendChild(col);
+
+            const lbl = document.createElement('div');
+            lbl.className = `bar-label ${item.isToday ? 'today' : ''}`;
+            lbl.textContent = item.label;
+            weeklyBarLabels.appendChild(lbl);
+        });
+    }
+
     function update24hCharts(totalSecsToday) {
         let totalGoal = appData.skills.reduce((sum, skill) => sum + (parseFloat(skill.goal) || 0), 0);
-        let displayGoal = totalGoal > 24 ? 24 : totalGoal; 
+        let scale = totalGoal > 24 ? (24 / totalGoal) : 1; // Tự thu tỷ lệ nếu tổng mục tiêu > 24h
         
-        const goalPercent = (displayGoal / 24) * 100;
-        goalChart.style.background = `conic-gradient(var(--primary) ${goalPercent}%, var(--bar-bg) 0)`;
+        let currentPercent = 0;
+        let gradientStops = [];
+        goalLegend.innerHTML = '';
+
+        appData.skills.forEach(skill => {
+            const g = parseFloat(skill.goal) || 0;
+            if (g > 0) {
+                const slicePercent = ((g * scale) / 24) * 100;
+                const nextPercent = currentPercent + slicePercent;
+                gradientStops.push(`${skill.color} ${currentPercent.toFixed(2)}% ${nextPercent.toFixed(2)}%`);
+                currentPercent = nextPercent;
+
+                const tag = document.createElement('span');
+                tag.className = 'legend-item';
+                tag.innerHTML = `<span class="color-dot" style="background:${skill.color}; width:8px; height:8px;"></span>${skill.name.split('/')[0].trim()} (${g}h)`;
+                goalLegend.appendChild(tag);
+            }
+        });
+
+        if (currentPercent < 100) {
+            gradientStops.push(`var(--bar-bg) ${currentPercent.toFixed(2)}% 100%`);
+        }
+
+        goalChart.style.background = gradientStops.length > 0 
+            ? `conic-gradient(${gradientStops.join(', ')})` 
+            : `conic-gradient(var(--bar-bg) 0% 100%)`;
         totalGoalText.textContent = `${totalGoal}h`;
 
         const workedHours = (totalSecsToday / 3600).toFixed(1);
@@ -773,10 +1084,144 @@
         actualWorkedText.textContent = `${workedHours}h`;
     }
 
+    // Vẽ biểu đồ tròn tỷ lệ phân bổ thời gian giữa các kỹ năng (%)
+    function renderSkillRatioChart(skillStats, totalSecs) {
+        const rangeNames = { today: 'Hôm nay / Сегодня', week: '7 ngày qua / 7 дней', month: 'Tháng này / Месяц' };
+        ratioRangeLabel.textContent = rangeNames[currentStatsRange] || '';
+        skillRatioLegend.innerHTML = '';
+
+        if (totalSecs <= 0 || Object.keys(skillStats).length === 0) {
+            skillRatioChart.style.background = 'conic-gradient(var(--bar-bg) 0% 100%)';
+            skillRatioLegend.innerHTML = '<div class="text-muted" style="text-align:center;">Chưa có dữ liệu trong khoảng thời gian này / Нет данных</div>';
+            return;
+        }
+
+        const sortedEntries = Object.entries(skillStats).sort((a, b) => b[1] - a[1]);
+        let currentPercent = 0;
+        let gradientStops = [];
+
+        sortedEntries.forEach(([skillName, secs]) => {
+            const skillObj = appData.skills.find(s => s.name === skillName);
+            const color = skillObj ? skillObj.color : '#9ca3af';
+            const pct = (secs / totalSecs) * 100;
+            const nextPercent = currentPercent + pct;
+
+            gradientStops.push(`${color} ${currentPercent.toFixed(2)}% ${nextPercent.toFixed(2)}%`);
+            currentPercent = nextPercent;
+
+            const row = document.createElement('div');
+            row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:6px 10px; background:var(--bg-color); border-radius:8px; border:1px solid var(--border); font-size:0.9rem;';
+            row.innerHTML = `
+                <span style="display:flex; align-items:center; gap:8px; font-weight:500;">
+                    <span class="color-dot" style="background:${color};"></span>
+                    ${skillName}
+                </span>
+                <span>
+                    <strong>${pct.toFixed(1)}%</strong> 
+                    <span class="text-muted" style="font-size:0.8rem;">(${formatHours(secs)}h)</span>
+                </span>
+            `;
+            skillRatioLegend.appendChild(row);
+        });
+
+        skillRatioChart.style.background = `conic-gradient(${gradientStops.join(', ')})`;
+    }
+
+    // Tính chuỗi ngày liên tiếp đạt mục tiêu tổng (Streak)
+    function updateStreak() {
+        const totalGoalHours = appData.skills.reduce((sum, s) => sum + (parseFloat(s.goal) || 0), 0);
+        if (totalGoalHours <= 0) {
+            streakBadge.textContent = '🔥 0 ngày';
+            return;
+        }
+        const targetSecs = totalGoalHours * 3600;
+
+        // Gom tổng thời gian theo từng ngày
+        const dailyTotals = {};
+        appData.activities.forEach(act => {
+            const dStr = new Date(act.date).toDateString();
+            dailyTotals[dStr] = (dailyTotals[dStr] || 0) + act.duration;
+        });
+
+        let streak = 0;
+        const checkDate = new Date();
+        const todayStr = checkDate.toDateString();
+
+        // Nếu hôm nay đã đạt mục tiêu thì tính luôn hôm nay, chưa thì kiểm tra từ hôm qua
+        if ((dailyTotals[todayStr] || 0) >= targetSecs) {
+            streak++;
+        }
+        checkDate.setDate(checkDate.getDate() - 1);
+
+        while (true) {
+            const dStr = checkDate.toDateString();
+            if ((dailyTotals[dStr] || 0) >= targetSecs) {
+                streak++;
+                checkDate.setDate(checkDate.getDate() - 1);
+            } else {
+                break;
+            }
+        }
+
+        streakBadge.textContent = `🔥 ${streak} ngày`;
+    }
+
+    // --- Checklist / Mục tiêu tuần ---
+    function renderTodos() {
+        todoList.innerHTML = '';
+        const total = appData.todos.length;
+        const doneCount = appData.todos.filter(t => t.done).length;
+        todoProgressText.textContent = `${doneCount}/${total} hoàn thành`;
+
+        if (total === 0) {
+            todoList.innerHTML = '<li style="text-align: center; color: var(--text-muted); padding: 15px;">Chưa có ghi chú nào / Пока нет заметок</li>';
+            return;
+        }
+
+        appData.todos.forEach((todo, index) => {
+            const li = document.createElement('li');
+            li.className = 'todo-item';
+            li.innerHTML = `
+                <label class="todo-left">
+                    <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${index})">
+                    <span class="${todo.done ? 'todo-done' : ''}">${todo.text}</span>
+                </label>
+                <button class="btn-outline btn-icon" style="color: var(--text-muted);" onclick="deleteTodo(${index})" title="Xóa">✕</button>
+            `;
+            todoList.appendChild(li);
+        });
+    }
+
+    function addTodo() {
+        const text = newTodoInput.value.trim();
+        if (!text) return;
+        appData.todos.unshift({ id: Date.now().toString(), text: text, done: false });
+        newTodoInput.value = '';
+        saveData();
+        renderTodos();
+    }
+
+    window.toggleTodo = function(index) {
+        if (appData.todos[index]) {
+            appData.todos[index].done = !appData.todos[index].done;
+            saveData();
+            renderTodos();
+        }
+    };
+
+    window.deleteTodo = function(index) {
+        appData.todos.splice(index, 1);
+        saveData();
+        renderTodos();
+    };
+
+    addTodoBtn.addEventListener('click', addTodo);
+    newTodoInput.addEventListener('keypress', e => { if (e.key === 'Enter') addTodo(); });
+
     // --- Pomodoro & Stopwatch Mode Switching ---
     function switchTimerMode(mode) {
         if (isRunning) {
-            alert('Vui lòng dừng đồng hồ trước khi đổi chế độ! / Остановите таймер перед сменой режима!');
+            showToast('Vui lòng dừng đồng hồ trước khi đổi chế độ! / Остановите таймер!', true);
             return;
         }
         timerMode = mode;
@@ -802,21 +1247,45 @@
     function setPomoType(type) {
         if (isRunning) return;
         pomoType = type;
+        const workMins = Math.max(1, parseInt(pomoWorkMinsInput.value) || 25);
+        const breakMins = Math.max(1, parseInt(pomoBreakMinsInput.value) || 5);
+
         if (type === 'work') {
             pomoWorkBtn.className = 'pomo-tag active-work';
             pomoBreakBtn.className = 'pomo-tag';
             taskInputRow.classList.remove('hidden');
-            pomoRemainingSecs = POMO_WORK_SECS;
+            pomoRemainingSecs = workMins * 60;
             displayTime.style.color = 'var(--primary)';
         } else {
             pomoBreakBtn.className = 'pomo-tag active-break';
             pomoWorkBtn.className = 'pomo-tag';
-            taskInputRow.classList.add('hidden'); // Nghỉ ngơi thì không cần chọn kỹ năng
-            pomoRemainingSecs = POMO_BREAK_SECS;
+            taskInputRow.classList.add('hidden');
+            pomoRemainingSecs = breakMins * 60;
             displayTime.style.color = 'var(--success)';
         }
         displayTime.textContent = formatTime(pomoRemainingSecs);
     }
+
+    // Cập nhật ngay khi người dùng chỉnh số phút Pomodoro
+    pomoWorkMinsInput.addEventListener('change', () => {
+        const val = Math.max(1, Math.min(180, parseInt(pomoWorkMinsInput.value) || 25));
+        pomoWorkMinsInput.value = val;
+        appData.pomoWorkMins = val;
+        saveData();
+        if (timerMode === 'pomodoro' && pomoType === 'work' && !isRunning) {
+            setPomoType('work');
+        }
+    });
+
+    pomoBreakMinsInput.addEventListener('change', () => {
+        const val = Math.max(1, Math.min(60, parseInt(pomoBreakMinsInput.value) || 5));
+        pomoBreakMinsInput.value = val;
+        appData.pomoBreakMins = val;
+        saveData();
+        if (timerMode === 'pomodoro' && pomoType === 'break' && !isRunning) {
+            setPomoType('break');
+        }
+    });
 
     modeStopwatchBtn.addEventListener('click', () => switchTimerMode('stopwatch'));
     modePomodoroBtn.addEventListener('click', () => switchTimerMode('pomodoro'));
@@ -828,6 +1297,8 @@
             isRunning = false;
             skillSelect.disabled = false;
             taskInput.disabled = false;
+            pomoWorkMinsInput.disabled = false;
+            pomoBreakMinsInput.disabled = false;
             toggleBtn.innerHTML = 'Bắt đầu <span class="text-ru" style="margin-left: 5px;">/ Начать</span>';
             toggleBtn.className = 'btn-primary';
         }
@@ -864,7 +1335,7 @@
             renderSkills();
             renderStatsAndHistory(); 
         } else {
-            alert("Kỹ năng đã tồn tại! / Навык уже существует!");
+            showToast("Kỹ năng đã tồn tại! / Навык уже существует!", true);
         }
         newSkillInput.value = '';
         newSkillGoal.value = '1';
@@ -935,10 +1406,18 @@
             }
         }
 
+        skillSelect.disabled = false;
+        taskInput.disabled = false;
+        pomoWorkMinsInput.disabled = false;
+        pomoBreakMinsInput.disabled = false;
+        toggleBtn.innerHTML = 'Bắt đầu <span class="text-ru" style="margin-left: 5px;">/ Начать</span>';
+        toggleBtn.className = 'btn-primary';
+        taskInput.value = ''; 
+
         if (isAutoFinish) {
             playBeepSound(true);
             if (pomoType === 'work') {
-                showToast('🍅 Hết phiên làm việc! Nghỉ 5 phút nhé! / Время отдыха!');
+                showToast(`🍅 Hết phiên làm việc! Nghỉ ${appData.pomoBreakMins} phút nhé! / Время отдыха!`);
                 setPomoType('break');
             } else {
                 showToast('⚡ Hết giờ nghỉ! Quay lại làm việc thôi! / Пора работать!');
@@ -952,17 +1431,10 @@
                 setPomoType(pomoType);
             }
         }
-
-        taskInput.value = ''; 
-        skillSelect.disabled = false;
-        taskInput.disabled = false;
-        toggleBtn.innerHTML = 'Bắt đầu <span class="text-ru" style="margin-left: 5px;">/ Начать</span>';
-        toggleBtn.className = 'btn-primary';
     }
 
     toggleBtn.addEventListener('click', () => {
         if (!isRunning) {
-            // Validate nếu cần chọn kỹ năng
             if (timerMode === 'stopwatch' || (timerMode === 'pomodoro' && pomoType === 'work')) {
                 if (!skillSelect.value) {
                     document.getElementById('selectError').style.display = 'block';
@@ -983,7 +1455,6 @@
                     displayTime.textContent = formatTime(currentElapsed);
                     checkGoalCompletion(skillSelect.value, currentElapsed);
                 } else {
-                    // Đếm ngược Pomodoro
                     const left = initialPomoSecs - diffSecs;
                     if (left <= 0) {
                         displayTime.textContent = '00:00';
@@ -1002,8 +1473,9 @@
             toggleBtn.className = 'btn-danger';
             skillSelect.disabled = true;
             taskInput.disabled = true;
+            pomoWorkMinsInput.disabled = true;
+            pomoBreakMinsInput.disabled = true;
         } else {
-            // Dừng thủ công
             const diffSecs = Math.floor((Date.now() - startTime) / 1000);
             const totalDuration = timerMode === 'stopwatch' ? (diffSecs + elapsedTime) : diffSecs;
             finishSession(totalDuration, false);
@@ -1011,12 +1483,61 @@
     });
 
     clearBtn.addEventListener('click', () => {
-        if (confirm("Xóa toàn bộ lịch sử? / Удалить всю историю?")) {
+        if (clearBtn.dataset.confirm === 'true') {
             appData.activities = [];
             notifiedToday = {};
             saveData();
             renderStatsAndHistory();
+            clearBtn.dataset.confirm = 'false';
+            clearBtn.textContent = 'Xóa tất cả';
+            clearBtn.style.background = '';
+            clearBtn.style.color = '';
+            showToast('Đã xóa toàn bộ lịch sử! / История очищена!');
+        } else {
+            clearBtn.dataset.confirm = 'true';
+            clearBtn.textContent = 'Xác nhận xóa?';
+            clearBtn.style.background = 'var(--danger)';
+            clearBtn.style.color = 'white';
+            setTimeout(() => {
+                if (clearBtn) {
+                    clearBtn.dataset.confirm = 'false';
+                    clearBtn.textContent = 'Xóa tất cả';
+                    clearBtn.style.background = '';
+                    clearBtn.style.color = '';
+                }
+            }, 3000);
         }
+    });
+
+    historyFilterSelect.addEventListener('change', renderStatsAndHistory);
+
+    // Xuất báo cáo CSV / Excel (có BOM UTF-8 để hiển thị chuẩn tiếng Việt & tiếng Nga)
+    exportCsvBtn.addEventListener('click', () => {
+        if (appData.activities.length === 0) {
+            showToast('Chưa có dữ liệu để xuất CSV! / Нет данных для экспорта!', true);
+            return;
+        }
+        const headers = ['Ngay (Дата)', 'Gio (Время)', 'Ky nang (Навык)', 'Ghi chu (Заметка)', 'Thoi luong - Phut (Минуты)', 'Thoi luong - Gio (Часы)'];
+        const rows = appData.activities.map(act => {
+            const d = new Date(act.date);
+            const dateStr = d.toLocaleDateString('vi-VN');
+            const timeStr = d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            const mins = (act.duration / 60).toFixed(1);
+            const hours = (act.duration / 3600).toFixed(2);
+            const safeSkill = `"${(act.skill || '').replace(/"/g, '""')}"`;
+            const safeTask = `"${(act.task || '').replace(/"/g, '""')}"`;
+            return [dateStr, timeStr, safeSkill, safeTask, mins, hours].join(',');
+        });
+
+        const csvContent = '\uFEFF' + [headers.join(','), ...rows].join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `BaoCao_KyNang_${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('Đã xuất file CSV/Excel thành công! / CSV файл скачан!');
     });
 
     // Xuất/Nhập JSON
@@ -1042,12 +1563,12 @@
                     appData = importedData;
                     saveData();
                     loadData();
-                    alert("Nhập dữ liệu thành công! / Данные успешно импортированы!");
+                    showToast("Nhập dữ liệu thành công! / Данные успешно импортированы!");
                 } else {
-                    alert("File không hợp lệ! / Неверный файл!");
+                    showToast("File không hợp lệ! / Неверный файл!", true);
                 }
             } catch (error) {
-                alert("Lỗi đọc file! / Ошибка чтения файла!");
+                showToast("Lỗi đọc file! / Ошибка чтения файла!", true);
             }
         };
         reader.readAsText(file);
