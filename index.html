@@ -269,6 +269,12 @@
         .hidden { display: none !important; }
         .error { color: var(--danger); font-size: 0.85rem; margin-top: 4px; display: none; }
     </style>
+    <link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="./icon-192.png">
+
 </head>
 <body>
 
@@ -1582,6 +1588,16 @@
     });
 
 </script>
+    <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(() => console.log('PWA Service Worker ready'))
+        .catch((err) => console.error('Service Worker error:', err));
+    });
+  }
+</script>
+
 </body>
 </html>
 ```
